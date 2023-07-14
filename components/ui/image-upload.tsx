@@ -39,20 +39,19 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         {value.map((url) => (
           <div
             key={url}
-            className="relative w-[200px] 
-                h-[200px] rounded-md overflow-hidden"
+            className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
           >
-            <div className="z-10 top-2 right-2">
+            <div className="z-10 absolute top-2 right-2">
               <Button
                 type="button"
                 onClick={() => onRemove(url)}
                 variant="destructive"
-                size="icon"
+                size="sm"
               >
-                <Trash className="w-4 h-4" />
+                <Trash className="h-4 w-4" />
               </Button>
             </div>
-            <Image fill className="objext-cover" alt="Image" src={url} />
+            <Image fill className="object-cover" alt="Image" src={url} />
           </div>
         ))}
       </div>
@@ -70,6 +69,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               onClick={onClick}
             >
               <ImagePlusIcon className="h-4 w-4 mr-2" />
+              Upload an image
             </Button>
           );
         }}
