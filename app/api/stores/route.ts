@@ -2,6 +2,7 @@ import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
+// Create new store
 export async function POST(req: Request) {
   try {
     // Authenticate currently logged in user
