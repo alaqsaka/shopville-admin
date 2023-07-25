@@ -29,6 +29,17 @@ export async function POST(
       return new NextResponse("Billboard Id is required.", { status: 400 });
     }
 
+    const storeByUserId = await prismadb.store.findFirst({
+      where: {
+        id: params.storeId,
+        userId,
+      },
+    });
+
+    if (!storeByUserId) {
+      return new NextResponse("Unauthorized", { status: 403 });
+    }
+
     const billboard = await prismadb.billboard.findFirst({
       where: {
         id: billboardId,
@@ -78,7 +89,7 @@ export async function GET(
 
     return NextResponse.json(categories);
   } catch (error) {
-    console.log("[CATEGORY_GET]", error);
+    console.log("[CATEGORIES_GET]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

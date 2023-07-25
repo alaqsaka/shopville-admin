@@ -5,9 +5,7 @@ import { NextResponse } from "next/server";
 // Get individual category
 export async function GET(
   req: Request,
-  {
-    params,
-  }: { params: { storeId: string; categoryId: string; billboardId: string } }
+  { params }: { params: { categoryId: string } }
 ) {
   try {
     if (!params.categoryId) {
@@ -27,7 +25,10 @@ export async function GET(
     }
 
     return NextResponse.json(category);
-  } catch (error) {}
+  } catch (error) {
+    console.log("[CATEGORY_GET]", error);
+    return new NextResponse("Internal server error", { status: 500 });
+  }
 }
 
 // Update category
@@ -43,7 +44,7 @@ export async function PATCH(
     const { name, billboardId } = body;
 
     if (!userId) {
-      return new NextResponse("Unauthorized.", { status: 400 });
+      return new NextResponse("Unauthenticated.", { status: 400 });
     }
 
     if (!params.categoryId) {
@@ -58,7 +59,7 @@ export async function PATCH(
       return new NextResponse("Billboard id is required", { status: 400 });
     }
 
-    const category = await prismadb.category.update({
+    const category = await prismadb.category.updateMany({
       where: {
         id: params.categoryId,
       },
@@ -71,14 +72,14 @@ export async function PATCH(
     return NextResponse.json(category);
   } catch (error) {
     console.log("[CATEGORY_PATCH]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
 // Delete category
 export async function DELETE(
   req: Request,
-  { params }: { params: { categoryId: string } }
+  { params }: { params: { categoryId: string; storeId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -89,6 +90,17 @@ export async function DELETE(
 
     if (!params.categoryId) {
       return new NextResponse("Category id is required", { status: 400 });
+    }
+
+    const storeById = await prismadb.store.findFirst({
+      where: {
+        id: params.storeId,
+        userId,
+      },
+    });
+
+    if (!storeById) {
+      return new NextResponse("Unauthorized.", { status: 403 });
     }
 
     const category = await prismadb.category.deleteMany({
