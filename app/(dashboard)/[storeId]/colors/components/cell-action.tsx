@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { SizeColumn } from "./columns";
+import { ColorColumn } from "./columns";
 import { Copy, Edit, TrashIcon } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ import axios from "axios";
 import AlertModal from "@/components/modals/alert-modal";
 
 interface CellActionProps {
-  data: SizeColumn;
+  data: ColorColumn;
 }
 
 const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -18,7 +18,7 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const params = useParams();
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
-    toast.success("Size Id copied to the clipboard.");
+    toast.success("Color Id copied to the clipboard.");
   };
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -26,11 +26,11 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/sizes/${data.id}`);
+      await axios.delete(`/api/${params.storeId}/colors/${data.id}`);
       router.refresh();
-      toast.success("Size successfully deleted.");
+      toast.success("Color successfully deleted.");
     } catch (error) {
-      toast.error("Make sure you removed all product using this size.");
+      toast.error("Make sure you removed all product using this color.");
     } finally {
       setLoading(false);
       setOpen(false);
@@ -49,11 +49,11 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => onCopy(data.id)}>
-            <Copy className="h-4 w-4 mr-2" /> Copy Size Id
+            <Copy className="h-4 w-4 mr-2" /> Copy Color Id
           </Button>
           <Button
             variant="default"
-            onClick={() => router.push(`/${params.storeId}/sizes/${data.id}`)}
+            onClick={() => router.push(`/${params.storeId}/colors/${data.id}`)}
           >
             <Edit className="h-4 w-4 mr-2" /> Edit
           </Button>
