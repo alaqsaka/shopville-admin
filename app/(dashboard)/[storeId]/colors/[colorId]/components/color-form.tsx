@@ -1,7 +1,7 @@
 "use client";
 
 import * as z from "zod";
-import { Color, Size } from "@prisma/client";
+import { Color } from "@prisma/client";
 import Heading from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
@@ -26,7 +26,9 @@ import { useOrigin } from "@/hooks/use-origin";
 
 const formSchema = z.object({
   name: z.string().min(1),
-  value: z.string().min(1),
+  value: z.string().min(4).regex(/^#/, {
+    message: "String must be a valid hex code",
+  }),
 });
 
 type ColorFormValues = z.infer<typeof formSchema>;
@@ -62,7 +64,7 @@ const ColorForm: React.FC<ColorFormProps> = ({ initialData }) => {
       setLoading(true);
       if (initialData) {
         await axios.patch(
-          `/api/${params.storeId}/colors/${params.sizeId}`,
+          `/api/${params.storeId}/colors/${params.colorId}`,
           data
         );
       } else {
@@ -81,7 +83,7 @@ const ColorForm: React.FC<ColorFormProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/colors/${params.sizeId}`);
+      await axios.delete(`/api/${params.storeId}/colors/${params.colorId}`);
       router.refresh();
       router.push(`/${params.storeId}/colors`);
       toast.success("Color successfully deleted.");
@@ -133,7 +135,7 @@ const ColorForm: React.FC<ColorFormProps> = ({ initialData }) => {
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Name of color"
+                        placeholder="Color Name"
                         {...field}
                       />
                     </FormControl>
@@ -150,11 +152,17 @@ const ColorForm: React.FC<ColorFormProps> = ({ initialData }) => {
                   <FormLabel>Value</FormLabel>
                   <FormControl>
                     <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="Value of color"
-                        {...field}
-                      />
+                      <div className="flex items-center gap-x-4">
+                        <Input
+                          disabled={loading}
+                          placeholder="Color Value"
+                          {...field}
+                        />
+                        <div
+                          className="border p-4 rounded-full"
+                          style={{ backgroundColor: field.value }}
+                        />
+                      </div>
                     </FormControl>
                   </FormControl>
                   <FormMessage />
