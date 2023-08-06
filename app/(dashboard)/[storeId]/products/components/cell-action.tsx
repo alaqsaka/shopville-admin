@@ -26,11 +26,11 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/billboards/${data.id}`);
+      await axios.delete(`/api/${params.storeId}/products/${data.id}`);
       router.refresh();
-      toast.success("Billboard successfully deleted.");
+      toast.success("Product successfully deleted.");
     } catch (error) {
-      toast.error("Make sure you removed all categories using this billboard.");
+      toast.error("Something went wrong.");
     } finally {
       setLoading(false);
       setOpen(false);
@@ -49,12 +49,12 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => onCopy(data.id)}>
-            <Copy className="h-4 w-4 mr-2" /> Copy Billboard Id
+            <Copy className="h-4 w-4 mr-2" /> Copy Product Id
           </Button>
           <Button
             variant="default"
             onClick={() =>
-              router.push(`/${params.storeId}/billboards/${data.id}`)
+              router.push(`/${params.storeId}/products/${data.id}`)
             }
           >
             <Edit className="h-4 w-4 mr-2" /> Edit

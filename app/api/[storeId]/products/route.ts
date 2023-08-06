@@ -125,6 +125,7 @@ export async function GET(
         images: true,
         category: true,
         color: true,
+        size: true,
       },
       orderBy: {
         createdAt: "desc",
