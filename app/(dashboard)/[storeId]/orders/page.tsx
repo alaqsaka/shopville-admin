@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { format } from "date-fns";
-import { BillboardClient } from "./components/client";
-import { BillboardColumn } from "./components/columns";
+import { OrderClient } from "./components/client";
+import { OrderColumn } from "./components/columns";
 import { formatter } from "@/lib/utils";
 
 const OrdersPage = async ({ params }: { params: { storeId: string } }) => {
@@ -21,7 +21,7 @@ const OrdersPage = async ({ params }: { params: { storeId: string } }) => {
     },
   });
 
-  const formattedOrders: BillboardColumn[] = orders.map((item) => ({
+  const formattedOrders: OrderColumn[] = orders.map((item) => ({
     id: item.id,
     phone: item.phone,
     address: item.address,
@@ -33,13 +33,14 @@ const OrdersPage = async ({ params }: { params: { storeId: string } }) => {
         return total + Number(item.product.price);
       }, 0)
     ),
+    isPaid: item.isPaid,
     createdAt: format(item.createdAt, "MMMM do, yyyy"),
   }));
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <BillboardClient data={formattedOrders} />
+        <OrderClient data={formattedOrders} />
       </div>
     </div>
   );
