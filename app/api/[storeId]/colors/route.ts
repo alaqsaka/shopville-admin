@@ -55,7 +55,10 @@ export async function POST(
 }
 
 // Get All Size
-async function GET(req: Request, { params }: { params: { storeId: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: { storeId: string } }
+) {
   try {
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
